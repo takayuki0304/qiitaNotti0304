@@ -49,7 +49,7 @@ jobs:
       - name: 'echo'
         run: |
           # ターゲットブランチとHEAD間で、追加,変更されたjavaファイルのパスを取得してループ処理
-          for file in $(git diff origin/${TARGET_BRANCH} HEAD --diff-filter=AM --name-only -- "*.java") ; do
+          for file in $(git diff origin/${TARGET_BRANCH} HEAD --diff-filter=AM --name-only -- "items/*.md") ; do
             # ここで任意の処理をする
             echo ${file}
           done
