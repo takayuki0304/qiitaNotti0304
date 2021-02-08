@@ -5,13 +5,19 @@ name: CI
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
+  #push:
+  #  branches: [ main ]
   pull_request:
     branches: [ main ]
+    paths:
+      - 'items/*.md'
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  #workflow_dispatch:
+
+env:
+  # プルリクエストのターゲットブランチ
+  TARGET_BRANCH: ${{ github.base_ref }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,6 +29,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: 'Checkout'
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
@@ -34,3 +41,15 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      # git diffをするためにターゲットブランチをフェッチする
+      - name: 'Fetch'
+        run: git fetch --depth 1 origin ${TARGET_BRANCH}
+
+      - name: 'echo'
+        run: |
+          # ターゲットブランチとHEAD間で、追加,変更されたjavaファイルのパスを取得してループ処理
+          for file in $(git diff origin/${TARGET_BRANCH} HEAD --diff-filter=AM --name-only -- "*.java") ; do
+            # ここで任意の処理をする
+            echo ${file}
+          done
