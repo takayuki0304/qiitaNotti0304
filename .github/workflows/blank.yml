@@ -54,4 +54,5 @@ jobs:
           for file in $(git diff origin/${TARGET_BRANCH} HEAD --diff-filter=AM --name-only -- "items/*.md") ; do
             # ここで任意の処理をする
             echo ${file}
+            echo test
           done
